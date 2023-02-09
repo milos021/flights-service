@@ -76,7 +76,7 @@ export class FlightService implements OnModuleInit, OnModuleDestroy {
     );
   }
 
-  setFlightsCache(flights): void {
+  setFlightsCache(flights: Flight[]): void {
     this.cacheManager.set(
       'flights',
       {
@@ -92,7 +92,7 @@ export class FlightService implements OnModuleInit, OnModuleDestroy {
   }
 
   // Checking if the hour has passed and flights should be updated;
-  shouldUpdateFlights(data): boolean {
+  shouldUpdateFlights(data: FlightsCache): boolean {
     const newDate = new Date();
     return Math.abs(data?.updatedAt?.valueOf() - newDate.valueOf()) / 36e5 < 1;
   }
