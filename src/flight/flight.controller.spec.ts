@@ -1,8 +1,6 @@
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
 import { CACHE_MANAGER } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
-import { of } from 'rxjs';
 import { FlightController } from './flight.controller';
 import { FlightService } from './flight.service';
 

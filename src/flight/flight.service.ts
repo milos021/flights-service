@@ -16,6 +16,7 @@ import {
   map,
   Observable,
   of,
+  startWith,
   Subscription,
   switchMap,
   take,
@@ -40,19 +41,20 @@ export class FlightService implements OnModuleInit, OnModuleDestroy {
   }
 
   updateFlightsEveryHour(): void {
-    this.getFlightsPoll();
     this.subscription$.add(
       interval(3600000)
-        .pipe(tap(() => this.getFlightsPoll()))
+        .pipe(
+          startWith(0),
+          map(() => this.getFlightsPoll()))
         .subscribe(),
     );
   }
 
   getFlightsPoll(): void {
-    this.getAllFlightsFromApi();
     this.subscription$.add(
       interval(2000)
         .pipe(
+          startWith(0),
           take(6 * 5),
           switchMap(() => this.getAllFlightsFromApi()),
           find((flights) => !!flights?.length),
@@ -105,7 +107,6 @@ export class FlightService implements OnModuleInit, OnModuleDestroy {
         return uniqueFlights;
       }),
       catchError((err) => {
-        console.log(err.message);
         return of(err.message);
       }),
     );
