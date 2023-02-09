@@ -23,6 +23,8 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+$ http://localhost:3000/flights
 ```
 
 ## Test
