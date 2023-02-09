@@ -67,10 +67,12 @@ describe('FlightService', () => {
 
   describe('It should test if the flights are valid (not older then one hour)', () => {
     it('should return array of flights', async () => {
-      jest.spyOn(service, 'areFlightsValid').mockImplementation(() => false);
+      jest
+        .spyOn(service, 'shouldUpdateFlights')
+        .mockImplementation(() => false);
 
-      expect(await service.areFlightsValid(flightsInvalid)).toBe(false);
-      expect(await service.areFlightsValid(flightsValid)).toBe(false);
+      expect(await service.shouldUpdateFlights(flightsInvalid)).toBe(false);
+      expect(await service.shouldUpdateFlights(flightsValid)).toBe(false);
     });
   });
 });

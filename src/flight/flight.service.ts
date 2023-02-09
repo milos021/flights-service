@@ -20,7 +20,6 @@ import {
   Subscription,
   switchMap,
   take,
-  tap,
   timeout,
 } from 'rxjs';
 import { flightsApiEndpoints } from './flight.constants';
@@ -45,11 +44,13 @@ export class FlightService implements OnModuleInit, OnModuleDestroy {
       interval(3600000)
         .pipe(
           startWith(0),
-          map(() => this.getFlightsPoll()))
+          map(() => this.getFlightsPoll()),
+        )
         .subscribe(),
     );
   }
 
+  // Fetching flights every 2 sec until it gets the results (max 30 times)
   getFlightsPoll(): void {
     this.subscription$.add(
       interval(2000)
@@ -66,7 +67,7 @@ export class FlightService implements OnModuleInit, OnModuleDestroy {
   getAllFlights(): Observable<Flight[]> {
     return this.getFlightsFromCache().pipe(
       switchMap((data) => {
-        if (data && this.areFlightsValid(data)) {
+        if (data && this.shouldUpdateFlights(data)) {
           return of(data.flights);
         } else {
           return this.getAllFlightsFromApi();
@@ -90,7 +91,8 @@ export class FlightService implements OnModuleInit, OnModuleDestroy {
     return from(this.cacheManager.get('flights')) as Observable<FlightsCache>;
   }
 
-  areFlightsValid(data): boolean {
+  // Checking if the hour has passed and flights should be updated;
+  shouldUpdateFlights(data): boolean {
     const newDate = new Date();
     return Math.abs(data?.updatedAt?.valueOf() - newDate.valueOf()) / 36e5 < 1;
   }
